@@ -22,7 +22,7 @@ object Callback {
       callbackSignal.flatMap { user =>
         githubTokenAuth(user.code).flatMap {
           case None => EventStream.empty
-          case Some(apiAuthResponse) => EventStream.fromValue(state.loadAuthResponse(apiAuthResponse))
+          case Some(apiAuthResponse) => state.loadAuthResponse(apiAuthResponse)
         }
       }
 

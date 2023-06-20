@@ -35,18 +35,18 @@ class State private(_accessToken: Var[Option[JWTToken]], _userProfile: Var[Optio
   def loggedIn: Boolean = _accessToken.now().isDefined
 
   // This function might arguably belong somewhere else into a separate Auth module?
-  def loadAuthResponse(authResponse: APIAuthResponse): Boolean = {
+  def loadAuthResponse(authResponse: APIAuthResponse): EventStream[Boolean] = {
     try {
       val APIAuthResponse(jwt) = authResponse
       val profile = State.tryParseJwtPayload(jwt)
 
       this.setAccessToken(jwt)
       this.setUserProfile(profile)
-      true
+      EventStream.fromValue(true)
     } catch { e =>
       println(s"Error encountered while loading auth response: $e")
       this.clear()
-      false
+      EventStream.fromValue(false)
     }
   }
 }

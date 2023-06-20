@@ -58,10 +58,10 @@ object API {
       .raw
       .post("/api/auth/refresh")
       .flatMap(parseResponse[APIAuthResponse])
-      .map {
+      .flatMap {
         case Left(error) => {
           println(s"Error while refreshing: $error")
-          false
+          EventStream.fromValue(false)
         }
         case Right(authResponse) => {
           println(s"Loading auth response after successful refresh: $authResponse")
